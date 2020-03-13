@@ -1,0 +1,53 @@
+## This configuration has the following assumptions:
+## This is the JSON payload being sent to a connect worker in distributed mode
+## The connector is set up with the SOURCE CLUSTER as its backing
+## The Distributed Connect worker has allowed overrides (connector.client.config.override.policy=All)
+## NO renaming is happening at the destination
+## NO security is set up at the source cluster
+## The service account for replicator has been set up with the following ACLs in Confluent Cloud
+## ALL for topic _confluent-command, DESCRIBE and CREATE for CLUSTER,
+## DESCRIBE for all topics, WRITE and DESCRIBECONFIGS for all topics
+
+
+
+{
+  "name":"replicator",
+  "config":{
+
+  ## Common Connect Configs
+    "connector.class":"io.confluent.connect.replicator.ReplicatorSourceConnector",
+    "tasks.max":4,
+    "key.converter":"io.confluent.connect.replicator.util.ByteArrayConverter",
+    "value.converter":"io.confluent.connect.replicator.util.ByteArrayConverter",
+
+  ## SRC cluster connection configuration
+    "src.kafka.bootstrap.servers":"<source-kafka-cluster-addresses>:9092",
+    "src.zookeeper.connect":"<source-zookeeper-addresses>:2128",
+
+  ## Destination cluster connection configuration (Security) and topic selection and renaming-strategy
+    "topic.regex":"^migr",
+    "topic.rename.format":"${topic}",
+    "dest.kafka.bootstrap.servers":"<ccloud-address>:9092",
+    "dest.kafka.security.protocol":"SASL_SSL",
+    "dest.kafka.sasl.jaas.config":"org.apache.kafka.common.security.plain.PlainLoginModule required username=\"<API KEY>\" password=\"<API SECRET>\";",
+    "dest.kafka.ssl.endpoint.identification.algorithm":"https",
+    "dest.kafka.sasl.mechanism":"PLAIN",
+
+  ## OVERRIDE of internal producer since this replicator is backed by the source cluster,
+  ## plus configuration for the longer publishing time
+    "producer.override.bootstrap.servers":"<ccloud-address>:9092",
+    "producer.override.security.protocol":"SASL_SSL",
+    "producer.override.sasl.jaas.config":"org.apache.kafka.common.security.plain.PlainLoginModule required username=\"<API KEY>\" password=\"<API SECRET>\";",
+    "producer.override.ssl.endpoint.identification.algorithm":"https",
+    "producer.override.sasl.mechanism":"PLAIN",
+    "producer.override.retry.backoff.ms":"500",
+    "producer.override.request.timeout.ms":"20000",
+
+  ## Custom replicator settings, this disables offset translation, preserves original partitions and replication factor
+    "offset.translator.tasks.max":"0",
+    "offset.timestamps.commit":"false",
+    "offset.topic.commit":"false",
+    "topic.auto.create":"true",
+    "topic.preserve.partitions":"true"
+  }
+}
