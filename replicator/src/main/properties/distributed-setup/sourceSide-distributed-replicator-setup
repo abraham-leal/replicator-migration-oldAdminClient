@@ -25,7 +25,7 @@
     "src.zookeeper.connect":"<source-zookeeper-addresses>:2128",
 
   ## Destination cluster connection configuration (Security) and topic selection and renaming-strategy
-    "topic.regex":"^migr",
+    "topic.regex":"^(?!_)\w+$",
     "topic.rename.format":"${topic}",
     "dest.kafka.bootstrap.servers":"<ccloud-address>:9092",
     "dest.kafka.security.protocol":"SASL_SSL",
@@ -46,7 +46,7 @@
   ## Custom replicator settings, this disables offset translation, preserves original partitions and replication factor
     "offset.translator.tasks.max":"0",
     "offset.timestamps.commit":"false",
-    "offset.topic.commit":"false",
+    "offset.topic.commit":"true",
     "topic.auto.create":"true",
     "topic.preserve.partitions":"true"
   }
