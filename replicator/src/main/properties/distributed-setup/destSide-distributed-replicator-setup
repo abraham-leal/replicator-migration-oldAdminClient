@@ -21,10 +21,10 @@
 
   ## SRC cluster connection configuration
     "src.kafka.bootstrap.servers":"<source-kafka-cluster-addresses>:9092",
-    "src.zookeeper.connect":"<source-zookeeper-addresses>:2128",
+    "src.zookeeper.connect":"<source-zookeeper-addresses>:2181",
 
   ## Destination cluster connection configuration (Security) and topic selection and renaming-strategy
-    "topic.regex":"^(?!_)\w+$",
+    "topic.regex":"^(?!_)\\w+$",
     "topic.rename.format":"${topic}",
     "dest.kafka.bootstrap.servers":"<ccloud-address>:9092",
     "dest.kafka.security.protocol":"SASL_SSL",
