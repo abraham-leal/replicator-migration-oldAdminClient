@@ -18,10 +18,12 @@
     "tasks.max":4,
     "key.converter":"io.confluent.connect.replicator.util.ByteArrayConverter",
     "value.converter":"io.confluent.connect.replicator.util.ByteArrayConverter",
+    "src.consumer.interceptor.classes":"io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor",
 
   ## SRC cluster connection configuration
     "src.kafka.bootstrap.servers":"<source-kafka-cluster-addresses>:9092",
     "src.zookeeper.connect":"<source-zookeeper-addresses>:2181",
+    "src.consumer.interceptor.classes":"io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor",
 
   ## Destination cluster connection configuration (Security) and topic selection and renaming-strategy
     "topic.regex":"^(?!_)\\w+$",
